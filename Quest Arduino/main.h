@@ -15,9 +15,9 @@
 #include "functies.h"
 
 // LED pin data
-#define LED_DDR			DDRD
-#define LED_PORT		PORTD
-#define LED_PIN			0b00000100
+#define LED_DDR			DDRB
+#define LED_PORT		PORTB
+#define LED_PIN			0b00100000
 
 // UART macro
 #define UART_HAS_DATA()	UCSR0A & (1<<RXC0)
