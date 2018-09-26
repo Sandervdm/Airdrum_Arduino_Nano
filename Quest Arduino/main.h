@@ -26,10 +26,11 @@
 #define PANEL_COUNT		6
 
 // protocol defines
-#define DATA_RGB		10
-#define DATA_HAND		11
-#define NACK			20
-#define ACK				21
+#define PROT_PREAMBLE	85
+#define PROT_DATA_RGB	10
+#define PROT_DATA_HAND	11
+#define PROT_NACK		20
+#define PROT_ACK		21
 
 // Ledstrip data
 #define NUM_PIXELS		PANEL_COUNT * 8  // 8 LEDs per panel, total of 5 * 8 leds

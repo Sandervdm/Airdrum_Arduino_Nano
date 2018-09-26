@@ -503,14 +503,14 @@ Disassembly of section .text:
  2ee:	1f 93       	push	r17
  2f0:	cf 93       	push	r28
  2f2:	df 93       	push	r29
-	uint8_t check = 0x55 + PANEL_COUNT + DATA_HAND;
-	UART_send(0x55);
+	uint8_t check = PROT_PREAMBLE + PANEL_COUNT + PROT_DATA_HAND;
+	UART_send(PROT_PREAMBLE);
  2f4:	85 e5       	ldi	r24, 0x55	; 85
  2f6:	b1 df       	rcall	.-158    	; 0x25a <UART_send>
 	UART_send(PANEL_COUNT);
  2f8:	86 e0       	ldi	r24, 0x06	; 6
  2fa:	af df       	rcall	.-162    	; 0x25a <UART_send>
-	UART_send(DATA_HAND);
+	UART_send(PROT_DATA_HAND);
  2fc:	8b e0       	ldi	r24, 0x0B	; 11
  2fe:	ad df       	rcall	.-166    	; 0x25a <UART_send>
 	for(uint8_t i = 0; i < PANEL_COUNT; i++){
@@ -520,11 +520,11 @@ Disassembly of section .text:
  // send hand data via protocol
  void send_hand_data(void) 
  {
-	uint8_t check = 0x55 + PANEL_COUNT + DATA_HAND;
+	uint8_t check = PROT_PREAMBLE + PANEL_COUNT + PROT_DATA_HAND;
  302:	16 e6       	ldi	r17, 0x66	; 102
-	UART_send(0x55);
+	UART_send(PROT_PREAMBLE);
 	UART_send(PANEL_COUNT);
-	UART_send(DATA_HAND);
+	UART_send(PROT_DATA_HAND);
 	for(uint8_t i = 0; i < PANEL_COUNT; i++){
 		uint8_t a_dat = adc_read(i);
  304:	8c 2f       	mov	r24, r28
@@ -535,10 +535,10 @@ Disassembly of section .text:
 		check += a_dat;
  30c:	1d 0f       	add	r17, r29
  {
-	uint8_t check = 0x55 + PANEL_COUNT + DATA_HAND;
-	UART_send(0x55);
+	uint8_t check = PROT_PREAMBLE + PANEL_COUNT + PROT_DATA_HAND;
+	UART_send(PROT_PREAMBLE);
 	UART_send(PANEL_COUNT);
-	UART_send(DATA_HAND);
+	UART_send(PROT_DATA_HAND);
 	for(uint8_t i = 0; i < PANEL_COUNT; i++){
  30e:	cf 5f       	subi	r28, 0xFF	; 255
  310:	c6 30       	cpi	r28, 0x06	; 6
@@ -575,9 +575,9 @@ Disassembly of section .text:
  334:	c4 2f       	mov	r28, r20
  336:	15 e5       	ldi	r17, 0x55	; 85
  338:	14 0f       	add	r17, r20
-	 uint8_t check = 0x55 + length + type;
+	 uint8_t check = PROT_PREAMBLE + length + type;
  33a:	16 0f       	add	r17, r22
-	 UART_send(0x55);
+	 UART_send(PROT_PREAMBLE);
  33c:	85 e5       	ldi	r24, 0x55	; 85
  33e:	8d df       	rcall	.-230    	; 0x25a <UART_send>
 	 UART_send(length);
@@ -606,8 +606,8 @@ Disassembly of section .text:
  364:	80 81       	ld	r24, Z
  366:	18 0f       	add	r17, r24
  {
-	 uint8_t check = 0x55 + length + type;
-	 UART_send(0x55);
+	 uint8_t check = PROT_PREAMBLE + length + type;
+	 UART_send(PROT_PREAMBLE);
 	 UART_send(length);
 	 UART_send(type);
 	 for(uint8_t i = 0; i < length; i++){
@@ -684,17 +684,17 @@ int main(void)
 				}
 				else {
 					// Checksum error, sent NACK
-					uint8_t nack_val = NACK;
+					uint8_t nack_val = PROT_NACK;
  3b0:	0f 2e       	mov	r0, r31
  3b2:	f4 e1       	ldi	r31, 0x14	; 20
  3b4:	5f 2e       	mov	r5, r31
  3b6:	f0 2d       	mov	r31, r0
 
 					// switch the received datatype
-					if(data_type == DATA_RGB && data_length == 20) {
+					if(data_type == PROT_DATA_RGB && data_length == 20) {
 						// Update LED data
 						setColor(LEDS, data);
-						uint8_t ackval = ACK;
+						uint8_t ackval = PROT_ACK;
  3b8:	0f 2e       	mov	r0, r31
  3ba:	f5 e1       	ldi	r31, 0x15	; 21
  3bc:	4f 2e       	mov	r4, r31
@@ -795,7 +795,7 @@ int main(void)
  432:	16 c0       	rjmp	.+44     	; 0x460 <__LOCK_REGION_LENGTH__+0x60>
 
 					// switch the received datatype
-					if(data_type == DATA_RGB && data_length == 20) {
+					if(data_type == PROT_DATA_RGB && data_length == 20) {
  434:	fa e0       	ldi	r31, 0x0A	; 10
  436:	3f 12       	cpse	r3, r31
  438:	0e c0       	rjmp	.+28     	; 0x456 <__LOCK_REGION_LENGTH__+0x56>
@@ -808,9 +808,9 @@ int main(void)
  442:	84 e9       	ldi	r24, 0x94	; 148
  444:	91 e0       	ldi	r25, 0x01	; 1
  446:	7f de       	rcall	.-770    	; 0x146 <setColor>
-						uint8_t ackval = ACK;
+						uint8_t ackval = PROT_ACK;
  448:	49 82       	std	Y+1, r4	; 0x01
-						Prot_Send(&ackval, 1, ACK);
+						Prot_Send(&ackval, 1, PROT_ACK);
  44a:	44 2d       	mov	r20, r4
  44c:	61 e0       	ldi	r22, 0x01	; 1
  44e:	ce 01       	movw	r24, r28
@@ -821,14 +821,14 @@ int main(void)
 				if(check_val == check_val_r) {
 
 					// switch the received datatype
-					if(data_type == DATA_RGB && data_length == 20) {
+					if(data_type == PROT_DATA_RGB && data_length == 20) {
  454:	0b c0       	rjmp	.+22     	; 0x46c <__LOCK_REGION_LENGTH__+0x6c>
 						// Update LED data
 						setColor(LEDS, data);
-						uint8_t ackval = ACK;
-						Prot_Send(&ackval, 1, ACK);
+						uint8_t ackval = PROT_ACK;
+						Prot_Send(&ackval, 1, PROT_ACK);
 					}
-					else if(data_type == NACK) {
+					else if(data_type == PROT_NACK) {
  456:	94 e1       	ldi	r25, 0x14	; 20
  458:	39 12       	cpse	r3, r25
  45a:	08 c0       	rjmp	.+16     	; 0x46c <__LOCK_REGION_LENGTH__+0x6c>
@@ -840,9 +840,9 @@ int main(void)
 				}
 				else {
 					// Checksum error, sent NACK
-					uint8_t nack_val = NACK;
+					uint8_t nack_val = PROT_NACK;
  460:	59 82       	std	Y+1, r5	; 0x01
-					Prot_Send(&nack_val, 1, NACK);
+					Prot_Send(&nack_val, 1, PROT_NACK);
  462:	45 2d       	mov	r20, r5
  464:	61 e0       	ldi	r22, 0x01	; 1
  466:	ce 01       	movw	r24, r28

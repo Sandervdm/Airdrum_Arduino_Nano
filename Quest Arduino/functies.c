@@ -183,10 +183,10 @@
  // send hand data via protocol
  void send_hand_data(void) 
  {
-	uint8_t check = 0x55 + PANEL_COUNT + DATA_HAND;
-	UART_send(0x55);
+	uint8_t check = PROT_PREAMBLE + PANEL_COUNT + PROT_DATA_HAND;
+	UART_send(PROT_PREAMBLE);
 	UART_send(PANEL_COUNT);
-	UART_send(DATA_HAND);
+	UART_send(PROT_DATA_HAND);
 	for(uint8_t i = 0; i < PANEL_COUNT; i++){
 		uint8_t a_dat = adc_read(i);
 		UART_send(a_dat);
@@ -199,8 +199,8 @@
  // send data via protocol
  void Prot_Send(uint8_t* ptr, uint8_t length, uint8_t type)
  {
-	 uint8_t check = 0x55 + length + type;
-	 UART_send(0x55);
+	 uint8_t check = PROT_PREAMBLE + length + type;
+	 UART_send(PROT_PREAMBLE);
 	 UART_send(length);
 	 UART_send(type);
 	 for(uint8_t i = 0; i < length; i++){

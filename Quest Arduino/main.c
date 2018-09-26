@@ -55,21 +55,21 @@ int main(void)
 				if(check_val == check_val_r) {
 
 					// switch the received datatype
-					if(data_type == DATA_RGB && data_length == 20) {
+					if(data_type == PROT_DATA_RGB && data_length == 20) {
 						// Update LED data
 						setColor(LEDS, data);
-						uint8_t ackval = ACK;
-						Prot_Send(&ackval, 1, ACK);
+						uint8_t ackval = PROT_ACK;
+						Prot_Send(&ackval, 1, PROT_ACK);
 					}
-					else if(data_type == NACK) {
+					else if(data_type == PROT_NACK) {
 						// last data didn't come through, send again
 						send_hand_data();
 					}
 				}
 				else {
 					// Checksum error, sent NACK
-					uint8_t nack_val = NACK;
-					Prot_Send(&nack_val, 1, NACK);
+					uint8_t nack_val = PROT_NACK;
+					Prot_Send(&nack_val, 1, PROT_NACK);
 				}
 			}
 		}
